@@ -1,7 +1,8 @@
 const express=require('express');
+const { registerUser } = require('../controllers/authController');
 const router=express.Router()
 
-router.post("/register",(req,res)=>{})
+router.post("/register",registerUser)
 router.post("/login",(req,res)=>{})
 router.get("/profile/:id",(req,res)=>{})
 router.put("/profile/:id",(req,res)=>{})
