@@ -60,13 +60,57 @@ exports.updateProfile=async(req,res)=>{
     } catch (err) {
          res.status(400).send({status:false,message:err.message})
     }
-  }
+}
 
-  exports.deleteUser=async(req,res)=>{
+exports.deleteUser=async(req,res)=>{
     const userId= req.params.id;
     try {
         const userData=await prisma.user.delete({where:{id:userId}})
         res.status(200).send({status:true,message:userData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+}
+
+
+exports.addSongs=async(req,res)=>{
+  const {title,artist,duration}=req.body;
+      try {
+        const songData=await prisma.song.create({data:{title,artist,duration}})
+        res.status(200).send({status:true,message:songData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+}
+
+exports.getSongs = async (req, res) => {
+  const songId = req.params.id; 
+  try {
+    const user = await prisma.song.findUnique({
+      where: { id: songId }, 
+    });
+    res.status(200).send({message:user});
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err.message });
+  }
+};
+
+exports.updateSong=async(req,res)=>{
+    const songId= req.params.id;
+    const {title,artist,duration}=req.body;
+    try {
+        const songData=await prisma.song.update({where:{id:songId},data:{title,artist,duration}})
+        res.status(200).send({status:true,message:songData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+}
+
+exports.deleteSong=async(req,res)=>{
+    const songId= req.params.id;
+    try {
+        const songData=await prisma.song.delete({where:{id:songId}})
+        res.status(200).send({status:true,message:songData})
     } catch (err) {
          res.status(400).send({status:false,message:err.message})
     }

@@ -4,10 +4,10 @@ const bcrypt=require('bcryptjs');
 const express = require('express');
 
 exports.registerUser=async (req,res)=>{
-    const{name,email,pass}=req.body;
+    const{name,email,pass,role}=req.body;
     const hassPassword= await bcrypt.hash(pass,10)
     try {
-        const userData=await prisma.user.create({data:{name,email,password:hassPassword}});
+        const userData=await prisma.user.create({data:{name,email,password:hassPassword,role:role==="ADMIN" ? "ADMIN" :"USER"}});
         res.status(200).send({status:true,message:userData});
     } catch (err) {
         console.log(err.message);
