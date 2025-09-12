@@ -10,7 +10,7 @@ router.post("/songs",addSongs)
 router.put("/songs/:id",updateSong)
 router.delete("/songs/:id",deleteSong)
 router.get("/songs/:id",getSongs)
-router.get('/palylist',getAllPlaylists)
-router.delete('/palylist/:id',deletePlaylists)
+router.get('/playlist',getAllPlaylists)
+router.delete('/playlist/:id',deletePlaylists)
 
 module.exports=router

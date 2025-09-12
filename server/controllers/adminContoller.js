@@ -117,9 +117,23 @@ exports.deleteSong=async(req,res)=>{
 }
 
 exports.getAllPlaylists=async(req,res)=>{
-  
+    try {
+        const playlistData= await prisma.playlist.findMany();
+        res.status(200).send({status:true,message:playlistData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
 }
 
 exports.deletePlaylists=async(req,res)=>{
-  
+     const playlistIds=req.params.id;
+    try {
+                await prisma.playlistSong.deleteMany({
+                    where: { playlistId: playlistIds },
+            });
+            const palylistData=await prisma.playlist.delete({where:{id:playlistIds}})
+             res.status(200).send({message:palylistData});
+        } catch (err) {
+            res.status(500).send({ message: "server error", error: err.message });
+        }
 }
