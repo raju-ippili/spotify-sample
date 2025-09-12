@@ -1,9 +1,9 @@
 const express=require('express');
-const { adminLogin } = require('../controllers/adminContoller');
+const { adminLogin, getUsers } = require('../controllers/adminContoller');
 const router=express.Router()
 
 router.get("/users",adminLogin)
-router.get("/users/:id",(req,res)=>{})
+router.get("/users/:id",getUsers)
 router.put("/users/:id",(req,res)=>{})
 router.delete("/users/:id",(req,res)=>{})
 router.post("/songs",(req,res)=>{})
