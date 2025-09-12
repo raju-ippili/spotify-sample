@@ -1,12 +1,12 @@
 const express=require('express');
-const { registerUser } = require('../controllers/authController');
+const { registerUser,userLogin,getProfile,updateProfile,deleteUser} = require('../controllers/authController');
 const router=express.Router()
 
 router.post("/register",registerUser)
-router.post("/login",(req,res)=>{})
-router.get("/profile/:id",(req,res)=>{})
-router.put("/profile/:id",(req,res)=>{})
-router.delete("/user/:id",(req,res)=>{})
+router.post("/login",userLogin)
+router.get("/profile/:id",getProfile)
+router.put("/profile/:id",updateProfile)
+router.delete("/:id",deleteUser)
 router.get("/songs",(req,res)=>{})
 router.get("/songs/:id",(req,res)=>{})
 router.post("/playlist",(req,res)=>{})
