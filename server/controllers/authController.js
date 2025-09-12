@@ -72,3 +72,59 @@ exports.deleteUser=async(req,res)=>{
     }
 }
 
+exports.getSongs = async (req, res) => {
+
+  try {
+    const user = await prisma.song.findMany();
+    res.status(200).send({message:user});
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err.message });
+  }
+};
+
+exports.searchSong = async (req, res) => {
+  const songId = req.params.id; 
+  try {
+    const user = await prisma.song.findUnique({
+      where: { id: songId }, 
+    });
+    res.status(200).send({message:user});
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err.message });
+  }
+};
+
+
+exports.createPlaylist=async(req,res)=>{
+        const {name,userId}=req.body;
+        try {
+            const palylistData=await prisma.playlist.create({data:{name,userId}})
+             res.status(200).send({message:palylistData});
+        } catch (err) {
+            res.status(500).send({ message: "server error", error: err.message });
+        }
+}
+
+exports.updatePlaylist=async(req,res)=>{
+      
+        const {playlistId,songId}=req.body;
+        try {
+            const palylistData=await prisma.playlistSong.create({data:{playlistId,songId}})
+             res.status(200).send({message:palylistData});
+        } catch (err) {
+            res.status(500).send({ message: "server error", error: err.message });
+        }        
+}
+
+exports.deletePlaylist=async(req,res)=>{
+    const playlistIds=req.params.id;
+    try {
+                await prisma.playlistSong.deleteMany({
+                    where: { playlistId: playlistIds },
+            });
+            const palylistData=await prisma.playlist.delete({where:{id:playlistIds}})
+             res.status(200).send({message:palylistData});
+        } catch (err) {
+            res.status(500).send({ message: "server error", error: err.message });
+        }
+}

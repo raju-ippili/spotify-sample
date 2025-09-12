@@ -1,5 +1,5 @@
 const express=require('express');
-const { adminLogin, getUsers,updateProfile,deleteUser,addSongs,getSongs,updateSong,deleteSong} = require('../controllers/adminContoller');
+const { adminLogin, getUsers,updateProfile,deleteUser,addSongs,getSongs,updateSong,deleteSong,getAllPlaylists,deletePlaylists} = require('../controllers/adminContoller');
 const router=express.Router()
 
 router.get("/users",adminLogin)
@@ -10,7 +10,7 @@ router.post("/songs",addSongs)
 router.put("/songs/:id",updateSong)
 router.delete("/songs/:id",deleteSong)
 router.get("/songs/:id",getSongs)
-router.get('/palylist',(req,res)=>{})
-router.get('/palylist/:id',(req,res)=>{})
+router.get('/palylist',getAllPlaylists)
+router.delete('/palylist/:id',deletePlaylists)
 
 module.exports=router

@@ -115,3 +115,11 @@ exports.deleteSong=async(req,res)=>{
          res.status(400).send({status:false,message:err.message})
     }
 }
+
+exports.getAllPlaylists=async(req,res)=>{
+  
+}
+
+exports.deletePlaylists=async(req,res)=>{
+  
+}
