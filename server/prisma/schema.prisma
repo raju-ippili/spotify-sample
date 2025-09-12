@@ -12,3 +12,45 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String     @unique
+  password  String
+  role      Role       @default(USER)
+  playlists Playlist[]
+  createdAt DateTime   @default(now())
+}
+
+model Song {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  artist        String
+  duration      Int
+  createdAt     DateTime       @default(now())
+  playlistSongs PlaylistSong[] // ✅ opposite relation
+}
+
+model Playlist {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  createdAt     DateTime       @default(now())
+  playlistSongs PlaylistSong[] // ✅ join collection
+}
+
+model PlaylistSong {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+  playlistId String
+  song       Song     @relation(fields: [songId], references: [id])
+  songId     String
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
