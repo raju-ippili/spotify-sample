@@ -1,26 +1,24 @@
-import express from "express";
-import prisma from "../utils/ConnectDB.js";
-import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+const {prisma} =require('../utils/ConnectDB');
+const jwt=require('jsonwebtoken');
+const bcrypt=require('bcryptjs');
+const express = require('express');
+require('dotenv').config()
 
-dotenv.config();
-
-export const adminLogin = async (req, res) => {
+exports.adminLogin = async (req, res) => {
   const { email, pass } = req.body;
 
   try {
     const validUser = await prisma.user.findFirst({
-      where: { email, role: "ADMIN" },
+      where: { email:email, role: "ADMIN" },
     });
 
     if (!validUser) {
-      return res.status(400).json({ message: "User doesn't exist" });
+      return res.status(400).send({ message: "User doesn't exist" });
     }
 
     const validPass = await bcrypt.compare(pass, validUser.password);
     if (!validPass) {
-      return res.status(400).json({ message: "Wrong password" });
+      return res.status(400).send({ message: "Wrong password" });
     }
 
     const token = jwt.sign(
@@ -29,8 +27,47 @@ export const adminLogin = async (req, res) => {
       { expiresIn: "6h" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).send({ message: "Login successful", token });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).send({ message: "Server error", error: err.message });
   }
 };
+
+
+
+exports.getUsers = async (req, res) => {
+  const userId = req.params.id; 
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId }, 
+    });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err.message });
+  }
+};
+
+
+exports.updateProfile=async(req,res)=>{
+    const userId= req.params.id;
+    const {name,email}=req.body;
+    try {
+        const userData=await prisma.user.update({where:{id:userId},data:{name,email}})
+        res.status(200).send({status:true,message:userData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+  }
+
+  exports.deleteUser=async(req,res)=>{
+    const userId= req.params.id;
+    try {
+        const userData=await prisma.user.delete({where:{id:userId}})
+        res.status(200).send({status:true,message:userData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+}

@@ -1,7 +1,7 @@
 const {prisma} =require('../utils/ConnectDB');
 const jwt=require('jsonwebtoken');
 const bcrypt=require('bcryptjs');
-const e = require('express');
+const express = require('express');
 
 exports.registerUser=async (req,res)=>{
     const{name,email,pass}=req.body;
