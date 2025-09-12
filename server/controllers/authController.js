@@ -1,6 +1,7 @@
 const {prisma} =require('../utils/ConnectDB');
 const jwt=require('jsonwebtoken');
-const bcrypt=require('bcryptjs')
+const bcrypt=require('bcryptjs');
+const e = require('express');
 
 exports.registerUser=async (req,res)=>{
     const{name,email,pass}=req.body;
@@ -21,7 +22,7 @@ exports.userLogin=async(req,res)=>{
         if(!validUser){
             return res.status(404).send({status:false,message:"user not found"});
         }
-        const isMatch=await bcrypt.compare(pass,validUser.pass);
+        const isMatch=await bcrypt.compare(pass,validUser.password);
         if(!isMatch){
              return res.status(404).send({status:false,message:"user not found"});
         }
@@ -38,3 +39,36 @@ exports.userLogin=async(req,res)=>{
         res.status(500).send({status:true,message:error.message})
     }
 }
+
+exports.getProfile=async(req,res)=>{
+    const userId=req.params.id;
+    try{
+        const userData=await prisma.user.findMany({where:{id:userId}});
+        res.status(200).send({status:true,message:userData})
+    }
+    catch(err){
+        res.status(400).send({status:false,message:err.message})
+    }
+}
+
+exports.updateProfile=async(req,res)=>{
+    const userId= req.params.id;
+    const {name,email}=req.body;
+    try {
+        const userData=await prisma.user.update({where:{id:userId},data:{name,email}})
+        res.status(200).send({status:true,message:userData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+}
+
+exports.deleteUser=async(req,res)=>{
+    const userId= req.params.id;
+    try {
+        const userData=await prisma.user.delete({where:{id:userId}})
+        res.status(200).send({status:true,message:userData})
+    } catch (err) {
+         res.status(400).send({status:false,message:err.message})
+    }
+}
+
