@@ -1,4 +1,4 @@
-import Logo from "./assets/logo.png"
+import Logo from "../../assets/logo.png"
 export default function Header(){
 return(
     <div className="bg-gray-950 px-3 py-3">
